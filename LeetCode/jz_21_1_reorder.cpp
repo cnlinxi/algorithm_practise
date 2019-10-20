@@ -3,17 +3,21 @@
 
 class Solution {
 public:
-    void reorder(std::vector<int> &vecNumbers) {
+    void reorder(std::vector<int> &vecNumbers, bool(*func)(int)) {
         int left = 0, right = vecNumbers.size() - 1;
         while (left < right) {
-            while (left < right && (vecNumbers[left] % 2 != 0)) ++left;
-            while (left < right && (vecNumbers[right] % 2 == 0)) --right;
+            while (left < right && !func(vecNumbers[left])) ++left;
+            while (left < right && func(vecNumbers[right])) --right;
             if (left < right) {
                 int t = vecNumbers[left];
                 vecNumbers[left] = vecNumbers[right];
                 vecNumbers[right] = t;
             }
         }
+    }
+
+    static bool func(int x) {
+        return (x & 1) == 0;
     }
 
     void printNumbers(const std::vector<int> &vecNumbers) {
@@ -32,7 +36,7 @@ int main() {
         std::cin >> t;
         vecNumbers.push_back(t);
     }
-    Solution().reorder(vecNumbers);
+    Solution().reorder(vecNumbers, Solution().func);
     Solution().printNumbers(vecNumbers);
     return 0;
 }
